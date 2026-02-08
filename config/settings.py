@@ -62,10 +62,10 @@ WSGI_APPLICATION = 'config.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': '1legohouse1$default',          # 'Your databases'에 표시된 이름
-        'USER': '1legohouse1',                  # 사용자 이름
-        'PASSWORD': '!123456789!', # <--- 여기에 직접 입력
-        'HOST': '1legohouse1.mysql.pythonanywhere-services.com', # Host address
+        'NAME': 'op_ticket_db',          # 'Your databases'에 표시된 이름
+        'USER': 'root',                  # 사용자 이름
+        'PASSWORD': '', # <--- 여기에 직접 입력
+        'HOST': '127.0.0.0', # Host address
         'PORT': '3306',                          # 기본 포트
     }
 }
