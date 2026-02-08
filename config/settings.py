@@ -9,7 +9,7 @@ SECRET_KEY = "django-insecure-t*7-brg)c2--9e8tkeqe4%=3=5v9=)r_puck9(%(0blrskko7r
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['1legohouse1.pythonanywhere.com']
+ALLOWED_HOSTS = ['115.68.224.229','localhost','127.0.0.1']
 
 
 # Application definition
