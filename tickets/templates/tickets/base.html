@@ -1,0 +1,41 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta name="robots" content="noindex, nofollow">
+    <meta charset="UTF-8">
+    <title>OS OP 준비 티켓</title>
+    <!-- Bootstrap CSS for styling -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'tickets/css/style.css' %}">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="{% url 'ticket_main' %}">OP 티켓 vDjango</a>
+            <div class="collapse navbar-collapse">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item"><a class="nav-link" href="{% url 'ticket_main' %}">OP 준비 티켓</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'ticket_list' %}">전체 목록 조회</a></li>
+
+                    <!-- [수정] 이 링크의 주소를 'ticket_stats'로 변경합니다. -->
+                    <li class="nav-item"><a class="nav-link" href="{% url 'ticket_stats' %}">통계/리포트</a></li>
+
+                    <!-- [삭제] 이 중복된 '통계/리포트' 줄을 완전히 제거합니다. -->
+
+                    <li class="nav-item"><a class="nav-link" href="/admin/" target="_blank">설정</a></li>
+
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container-fluid mt-4">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>

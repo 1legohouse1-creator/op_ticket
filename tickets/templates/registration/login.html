@@ -1,0 +1,33 @@
+{% extends 'tickets/base.html' %}
+
+{% block content %}
+<div class="container d-flex justify-content-center align-items-center" style="min-height: 80vh;">
+    <div class="card shadow" style="width: 100%; max-width: 400px;">
+        <div class="card-header bg-primary text-white text-center">
+            <h4 class="mb-0">OP Ticket 로그인</h4>
+        </div>
+        <div class="card-body p-4">
+            <form method="post">
+                {% csrf_token %}
+
+                <div class="mb-3">
+                    <label for="id_username" class="form-label">아이디</label>
+                    <input type="text" name="username" class="form-control" id="id_username" required autofocus>
+                </div>
+
+                <div class="mb-3">
+                    <label for="id_password" class="form-label">비밀번호</label>
+                    <input type="password" name="password" class="form-control" id="id_password" required>
+                </div>
+
+                <div class="d-grid gap-2">
+                    <button type="submit" class="btn btn-primary btn-lg">로그인</button>
+                </div>
+            </form>
+        </div>
+        <div class="card-footer text-center text-muted">
+            <small>아이디가 없으신가요? 관리자에게 문의하세요.</small>
+        </div>
+    </div>
+</div>
+{% endblock %}

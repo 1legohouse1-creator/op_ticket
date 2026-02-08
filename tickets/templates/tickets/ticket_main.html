@@ -1,0 +1,376 @@
+{% extends 'tickets/base.html' %}
+
+{% block content %}
+
+<div class="d-flex justify-content-end align-items-center mb-3">
+    {% if user.is_authenticated %}
+        <span class="me-3 fw-bold text-primary">
+            <i class="fas fa-user-nurse"></i> {{ user.username }}님 접속중
+        </span>
+
+        <form action="{% url 'logout' %}" method="post" style="display:inline;">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-outline-danger btn-sm">로그아웃</button>
+        </form>
+    {% else %}
+        <span class="me-3 text-muted">로그인이 필요합니다</span>
+        <a href="{% url 'login' %}" class="btn btn-primary btn-sm">로그인</a>
+    {% endif %}
+</div>
+
+<div class="row">
+    <!-- 왼쪽: 입력 폼 섹션 -->
+    <div class="col-lg-6">
+        <h3>OP 준비 티켓 입력
+    {% if latest_update %}
+    <span style="font-size: 0.5em; color: #666; float: right; margin-top: 10px; font-weight: normal;">
+        Last Updated: {{ latest_update.update_date|date:"Y-m-d" }}
+        <span style="margin-left:5px; color: #007bff;">[{{ latest_update.content }}]</span>
+    </span>
+    {% endif %}
+</h3>
+
+        <ul class="nav nav-tabs" id="surgeryTab" role="tablist">
+            <li class="nav-item" role="presentation"><button class="nav-link active" id="upper-tab" data-bs-toggle="tab" data-bs-target="#upper-panel" type="button">Upper</button></li>
+            <li class="nav-item" role="presentation"><button class="nav-link" id="tl-tab" data-bs-toggle="tab" data-bs-target="#tl-panel" type="button">T&L</button></li>
+            <li class="nav-item" role="presentation"><button class="nav-link" id="foot-tab" data-bs-toggle="tab" data-bs-target="#foot-panel" type="button">Foot</button></li>
+        </ul>
+        <div class="tab-content" id="surgeryTabContent">
+            <!-- Upper 탭 패널 -->
+            <div class="tab-pane fade show active" id="upper-panel" role="tabpanel">
+                <form method="post" id="upper-form" class="p-3 border border-top-0">
+                    {% csrf_token %}
+                    <input type="hidden" name="surgery_type" value="upper">
+                    <div class="row mb-3"><div class="col-md-4">{{ upper_form.surgery_date.label_tag }} {{ upper_form.surgery_date }}</div><div class="col-md-4">{{ upper_form.professor_name.label_tag }} {{ upper_form.professor_name }}</div><div class="col-md-4">{{ upper_form.surgery_name.label_tag }} {{ upper_form.surgery_name }}</div></div>
+                    <div class="row mb-3"><div class="col-md-4">{{ upper_form.anesthesia.label_tag }} {{ upper_form.anesthesia }}</div><div class="col-md-4">{{ upper_form.op_side.label_tag }} {{ upper_form.op_side }}</div><div class="col-md-4">{{ upper_form.op_site.label_tag }} {{ upper_form.op_site }}</div></div>
+                    <div class="form-section"><h5>E</h5><div class="row"><div class="col-md-6 mb-3">{{ upper_form.clothing.label_tag }} {{ upper_form.clothing }}</div><div class="col-md-6 mb-3">{{ upper_form.brace.label_tag }} {{ upper_form.brace }}</div><div class="col-md-6 mb-3">{{ upper_form.op_marking.label_tag }} {{ upper_form.op_marking }}</div><div class="col-md-6 mb-3">{{ upper_form.shaving_status.label_tag }} {{ upper_form.shaving_status }}</div><div class="col-md-6 mb-3">{{ upper_form.npo_status.label_tag }} {{ upper_form.npo_status }}</div><div class="col-md-6 mb-3">{{ upper_form.ast_result.label_tag }} {{ upper_form.ast_result }}</div><div class="col-md-6 mb-3">{{ upper_form.ast_site.label_tag }} {{ upper_form.ast_site }}</div></div></div>
+                    <div class="form-section"><h5>N</h5><div class="row"><div class="col-md-6 mb-3">{{ upper_form.foleys_cath.label_tag }} {{ upper_form.foleys_cath }}</div><div class="col-md-6 mb-3">{{ upper_form.iv_line.label_tag }} {{ upper_form.iv_line }}</div></div></div>
+                    <div class="form-section"><h5>D</h5><div class="row"><div class="col-md-6 mb-3">{{ upper_form.supplies.label_tag }} {{ upper_form.supplies }}</div><div class="col-md-6 mb-3">{{ upper_form.supplies2.label_tag }} {{ upper_form.supplies2 }}</div><div class="col-md-6 mb-3">{{ upper_form.antibiotics.label_tag }} {{ upper_form.antibiotics }}</div><div class="col-md-6 mb-3">{{ upper_form.id_bracelet.label_tag }} {{ upper_form.id_bracelet }}</div></div>{{ upper_form.memo.label_tag }} {{ upper_form.memo }}</div>
+                    <!-- 저장-수정-삭제 -->
+                    <button type="button" class="btn btn-primary mt-3 save-btn" data-part-type="upper">저장</button>
+                    <button type="button" class="btn btn-secondary mt-3 update-btn" data-part-type="upper">수정</button>
+                    <button type="button" class="btn btn-danger mt-3 delete-btn" data-part-type="upper">삭제</button>
+                </form>
+            </div>
+            <!-- T&L 탭 패널 -->
+            <div class="tab-pane fade" id="tl-panel" role="tabpanel">
+                <form method="post" id="tl-form" class="p-3 border border-top-0">
+                    {% csrf_token %}
+                    <input type="hidden" name="surgery_type" value="tl">
+                    <div class="row mb-3"><div class="col-md-4">{{ tl_form.surgery_date.label_tag }} {{ tl_form.surgery_date }}</div><div class="col-md-4">{{ tl_form.professor_name.label_tag }} {{ tl_form.professor_name }}</div><div class="col-md-4">{{ tl_form.surgery_name.label_tag }} {{ tl_form.surgery_name }}</div></div>
+                    <div class="row mb-3"><div class="col-md-4">{{ tl_form.spine_region.label_tag }} {{ tl_form.spine_region }}</div><div class="col-md-4">{{ tl_form.approach.label_tag }} {{ tl_form.approach }}</div><div class="col-md-4">{{ tl_form.level_count.label_tag }} {{ tl_form.level_count }}</div></div>
+                    <div class="row mb-3"><div class="col-md-4">{{ tl_form.anesthesia.label_tag }} {{ tl_form.anesthesia }}</div></div>
+                    <div class="form-section"><h5>E</h5><div class="row"><div class="col-md-6 mb-3">{{ tl_form.clothing.label_tag }} {{ tl_form.clothing }}</div><div class="col-md-6 mb-3">{{ tl_form.brace.label_tag }} {{ tl_form.brace }}</div><div class="col-md-6 mb-3">{{ tl_form.op_marking.label_tag }} {{ tl_form.op_marking }}</div><div class="col-md-6 mb-3">{{ tl_form.shaving_status.label_tag }} {{ tl_form.shaving_status }}</div><div class="col-md-6 mb-3">{{ tl_form.pre_ru_status.label_tag }} {{ tl_form.pre_ru_status }}</div><div class="col-md-6 mb-3">{{ tl_form.pre_ru_result.label_tag }} {{ tl_form.pre_ru_result }}</div><div class="col-md-6 mb-3">{{ tl_form.enema_status.label_tag }} {{ tl_form.enema_status }}</div><div class="col-md-6 mb-3">{{ tl_form.enema_details.label_tag }} {{ tl_form.enema_details }}</div><div class="col-md-6 mb-3">{{ tl_form.hair.label_tag }} {{ tl_form.hair }}</div><div class="col-md-6 mb-3">{{ tl_form.nipple.label_tag }} {{ tl_form.nipple }}</div><div class="col-md-6 mb-3">{{ tl_form.npo_status.label_tag }} {{ tl_form.npo_status }}</div><div class="col-md-6 mb-3">{{ tl_form.ast_result.label_tag }} {{ tl_form.ast_result }}</div><div class="col-md-6 mb-3">{{ tl_form.ast_site.label_tag }} {{ tl_form.ast_site }}</div></div></div>
+                    <div class="form-section"><h5>N</h5><div class="row"><div class="col-md-6 mb-3">{{ tl_form.foleys_cath.label_tag }} {{ tl_form.foleys_cath }}</div><div class="col-md-6 mb-3">{{ tl_form.iv_line.label_tag }} {{ tl_form.iv_line }}</div></div></div>
+                    <div class="form-section"><h5>D</h5><div class="row"><div class="col-md-6 mb-3">{{ tl_form.supplies.label_tag }} {{ tl_form.supplies }}</div><div class="col-md-6 mb-3">{{ tl_form.supplies2.label_tag }} {{ tl_form.supplies2 }}</div><div class="col-md-6 mb-3">{{ tl_form.antibiotics.label_tag }} {{ tl_form.antibiotics }}</div><div class="col-md-6 mb-3">{{ tl_form.id_bracelet.label_tag }} {{ tl_form.id_bracelet }}</div></div>{{ tl_form.memo.label_tag }} {{ tl_form.memo }}</div>
+                    <!-- 저장-수정-삭제 -->
+                    <button type="button" class="btn btn-primary mt-3 save-btn" data-part-type="tl">저장</button>
+                    <button type="button" class="btn btn-secondary mt-3 update-btn" data-part-type="tl">수정</button>
+                    <button type="button" class="btn btn-danger mt-3 delete-btn" data-part-type="tl">삭제</button>
+                </form>
+            </div>
+            <!-- Foot 탭 패널 -->
+            <div class="tab-pane fade" id="foot-panel" role="tabpanel">
+                <form method="post" id="foot-form" class="p-3 border border-top-0">
+                    {% csrf_token %}
+                    <input type="hidden" name="surgery_type" value="foot">
+                    <div class="row mb-3"><div class="col-md-4">{{ foot_form.surgery_date.label_tag }} {{ foot_form.surgery_date }}</div><div class="col-md-4">{{ foot_form.professor_name.label_tag }} {{ foot_form.professor_name }}</div><div class="col-md-4">{{ foot_form.surgery_name.label_tag }} {{ foot_form.surgery_name }}</div></div>
+                    <div class="row mb-3"><div class="col-md-4">{{ foot_form.anesthesia.label_tag }} {{ foot_form.anesthesia }}</div><div class="col-md-4">{{ foot_form.op_side.label_tag }} {{ foot_form.op_side }}</div><div class="col-md-4">{{ foot_form.op_site.label_tag }} {{ foot_form.op_site }}</div></div>
+                    <div class="form-section"><h5>E</h5><div class="row"><div class="col-md-6 mb-3">{{ foot_form.clothing.label_tag }} {{ foot_form.clothing }}</div><div class="col-md-6 mb-3">{{ foot_form.brace.label_tag }} {{ foot_form.brace }}</div><div class="col-md-6 mb-3">{{ foot_form.op_marking.label_tag }} {{ foot_form.op_marking }}</div><div class="col-md-6 mb-3">{{ foot_form.shaving_status.label_tag }} {{ foot_form.shaving_status }}</div><div class="col-md-6 mb-3">{{ foot_form.npo_status.label_tag }} {{ foot_form.npo_status }}</div><div class="col-md-6 mb-3">{{ foot_form.ast_result.label_tag }} {{ foot_form.ast_result }}</div><div class="col-md-6 mb-3">{{ foot_form.ast_site.label_tag }} {{ foot_form.ast_site }}</div></div></div>
+                    <div class="form-section"><h5>N</h5><div class="row"><div class="col-md-6 mb-3">{{ foot_form.foleys_cath.label_tag }} {{ foot_form.foleys_cath }}</div><div class="col-md-6 mb-3">{{ foot_form.iv_line.label_tag }} {{ foot_form.iv_line }}</div></div></div>
+                    <div class="form-section"><h5>D</h5><div class="row"><div class="col-md-6 mb-3">{{ foot_form.supplies.label_tag }} {{ foot_form.supplies }}</div><div class="col-md-6 mb-3">{{ foot_form.supplies2.label_tag }} {{ foot_form.supplies2 }}</div><div class="col-md-6 mb-3">{{ foot_form.antibiotics.label_tag }} {{ foot_form.antibiotics }}</div><div class="col-md-6 mb-3">{{ foot_form.id_bracelet.label_tag }} {{ foot_form.id_bracelet }}</div></div>{{ foot_form.memo.label_tag }} {{ foot_form.memo }}</div>
+                    <!-- 저장-수정-삭제 -->
+                    <button type="button" class="btn btn-primary mt-3 save-btn" data-part-type="foot">저장</button>
+                    <button type="button" class="btn btn-secondary mt-3 update-btn" data-part-type="foot">수정</button>
+                    <button type="button" class="btn btn-danger mt-3 delete-btn" data-part-type="foot">삭제</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!-- 오른쪽 패널 ... -->
+    <div class="col-lg-6">
+        <div class="info-box"><h4>※ 주의사항</h4><div id="notes-upper">{{ notices.upper|safe }}</div><div id="notes-tl" style="display: none;">{{ notices.tl|safe }}</div><div id="notes-foot" style="display: none;">{{ notices.foot|safe }}</div></div>
+        <div class="info-box"><h4>수술 목록</h4><div class="table-responsive" style="max-height: 600px; overflow-y: auto;"><table class="table table-striped table-sm"><thead><tr><th>ID</th><th>수술일</th><th>수술명</th><th>담당교수</th><th>보조기</th></tr></thead><tbody id="surgeryListBody">{% for ticket in tickets %}<tr data-ticket-id="{{ ticket.id }}" style="cursor: pointer;"><td>{{ ticket.id }}</td><td>{{ ticket.surgery_date|date:"Y-m-d" }}</td><td>{{ ticket.surgery_name }}</td><td>{{ ticket.professor_name }}</td><td>{{ ticket.brace }}</td></tr>{% endfor %}</tbody></table></div></div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+{{ autofill_rules_json|json_script:"autofill-rules" }}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // 1. 데이터 가져오기
+    let selectedTicketId = null;
+    let autoFillLikables = {};
+
+    try {
+        autoFillLikables = JSON.parse(document.getElementById('autofill-rules').textContent);
+        console.log("자동완성 규칙 로드 성공:", autoFillLikables); // F12 콘솔에서 확인 가능
+    } catch (e) {
+        console.error("자동완성 규칙 파싱 실패:", e);
+    }
+
+// ▼▼▼▼▼ [여기! 이 코드를 추가해주세요] ▼▼▼▼▼
+    // 데이터가 제대로 왔는지 화면에 경고창으로 띄워서 확인합니다.
+    //setTimeout(() => {
+        //const keys = Object.keys(autoFillLikables);
+        //if (keys.length === 0) {
+            //alert("❌ 비상! 서버에서 규칙을 하나도 못 가져왔습니다.\nWeb 탭에서 Reload를 안 했거나, constants.py 연결이 끊겼습니다.");
+        //} else {
+            // 규칙 중 첫 번째 하나만 예시로 보여줍니다.
+            //alert("✅ 규칙 로드 성공!\n총 개수: " + keys.length + "개\n첫번째 키 예시: " + keys[0]);
+        //}
+    //}, 1000);
+    // ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲
+
+    // 2. [핵심 수정] 자동 채움 함수 (하이픈 - 적용 완료)
+    function applyHyperFootAutoFill() {
+        const activePanel = document.querySelector('.tab-pane.active');
+        if (!activePanel) return;
+
+        // 패널 ID에서 'upper', 'tl', 'foot' 추출
+        const panelId = activePanel.id;
+        const partType = panelId.replace('-panel', '');
+
+        console.log("현재 활성 패널:", partType); // 디버깅용
+
+        let ruleKey = null;
+
+        // 키(Key) 생성 로직
+        if (partType === 'upper' || partType === 'foot') {
+            // ID 형식: id_upper-op_side (하이픈 주의)
+            const sideEl = document.getElementById(`id_${partType}-op_side`);
+            const siteEl = document.getElementById(`id_${partType}-op_site`);
+
+            if (sideEl && siteEl && sideEl.value && siteEl.value) {
+                ruleKey = `${sideEl.value}-${siteEl.value}`;
+            }
+
+        } else if (partType === 'tl') {
+            const regionEl = document.getElementById(`id_${partType}-spine_region`);
+            const approachEl = document.getElementById(`id_${partType}-approach`);
+            const levelEl = document.getElementById(`id_${partType}-level_count`);
+            const professorEl = document.getElementById(`id_${partType}-professor_name`);
+
+            if (regionEl && approachEl && levelEl && professorEl) {
+                if(regionEl.value && approachEl.value && levelEl.value && professorEl.value) {
+                    ruleKey = `${regionEl.value}-${approachEl.value}-${levelEl.value}-${professorEl.value}`;
+                }
+            }
+        }
+
+        console.log("생성된 키:", ruleKey); // 디버깅용
+
+        // 규칙 적용
+        if (ruleKey && autoFillLikables[ruleKey]) {
+            const rule = autoFillLikables[ruleKey];
+            console.log("규칙 발견! 적용합니다:", rule);
+
+            Object.keys(rule).forEach(field => {
+                // [중요] 여기서도 하이픈(-) 사용
+                const targetId = `id_${partType}-${field}`;
+                const fieldElement = document.getElementById(targetId);
+
+                if (fieldElement) {
+                    fieldElement.value = rule[field];
+                    // 값이 변경되었음을 알리는 이벤트 발생 (필요 시)
+                    fieldElement.dispatchEvent(new Event('change'));
+                } else {
+                    console.log("타겟 필드를 못 찾음:", targetId);
+                }
+            });
+        }
+    }
+
+    // 3. [핵심 수정] 이벤트 감시자 연결 (하이픈 - 적용 완료)
+    // 이 부분에서 오타가 나면 자동완성이 시작조차 안 됩니다.
+    const triggers = [
+        '[id$="-op_side"]',       // id_upper-op_side
+        '[id$="-op_site"]',       // id_upper-op_site
+        '[id$="-spine_region"]',  // id_tl-spine_region
+        '[id$="-approach"]',
+        '[id$="-level_count"]',
+        '[id$="-professor_name"]'
+    ].join(',');
+
+    document.querySelectorAll(triggers).forEach(el => {
+        // 기존 'change' 이벤트에 함수 연결
+        el.addEventListener('change', function() {
+            console.log("값 변경 감지됨:", this.id); // 변경될 때마다 콘솔에 뜸
+            applyHyperFootAutoFill();
+        });
+    });
+
+    // -----------------------------------------------------------
+    // 기존 기능 유지 (탭 전환, 저장, 수정, 삭제 등)
+    // -----------------------------------------------------------
+
+    // 탭 전환 처리
+    const tabButtons = document.querySelectorAll('button[data-bs-toggle="tab"]');
+    const notesContainer = {
+        'upper': document.getElementById('notes-upper'),
+        'tl': document.getElementById('notes-tl'),
+        'foot': document.getElementById('notes-foot')
+    };
+
+    function updateVisibleNotice(partType) {
+        Object.values(notesContainer).forEach(noteDiv => { if(noteDiv) noteDiv.style.display = 'none'; });
+        if (notesContainer[partType]) { notesContainer[partType].style.display = 'block'; }
+    }
+
+    tabButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            selectedTicketId = null;
+            document.querySelectorAll('#surgeryListBody tr').forEach(tr => tr.style.backgroundColor = '');
+            document.querySelectorAll('form').forEach(form => form.reset());
+
+            const targetPanelId = this.getAttribute('data-bs-target');
+            const partType = targetPanelId.replace('#', '').replace('-panel', '');
+            updateVisibleNotice(partType);
+        });
+    });
+
+    // API 응답 처리
+    function handleResponse(response) {
+        return response.json().then(data => {
+            if (!response.ok) {
+                const error = new Error(data.message || '알 수 없는 오류');
+                error.errors = data.errors;
+                throw error;
+            }
+            return data;
+        });
+    }
+
+    // 저장/수정 로직
+    function handleSaveOrUpdate(partType, ticketId = null) {
+        const form = document.getElementById(`${partType}-form`);
+        if (!form) return;
+
+        const formData = new FormData(form);
+        let data = Object.fromEntries(formData.entries());
+        data.part_type = partType;
+
+        const csrfInput = form.querySelector('input[name="csrfmiddlewaretoken"]');
+        const csrfToken = csrfInput ? csrfInput.value : '';
+
+        const url = ticketId
+            ? `{% url 'update_ticket' 0 %}`.replace('0', ticketId)
+            : `{% url 'create_ticket' %}`;
+
+        fetch(url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'X-CSRFToken': csrfToken },
+            body: JSON.stringify(data)
+        })
+        .then(handleResponse)
+        .then(result => {
+            alert(result.message);
+            window.location.reload();
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            if (error.errors) {
+                let errorMsg = "입력값을 확인해주세요:\n";
+                for (const [field, messages] of Object.entries(error.errors)) {
+                    if(messages.length > 0 && messages[0].message) {
+                        errorMsg += `- ${field}: ${messages[0].message}\n`;
+                    }
+                }
+                alert(errorMsg);
+            } else {
+                alert(error.message);
+            }
+        });
+    }
+
+    // 삭제 로직
+    function handleDelete(ticketId) {
+        if (!ticketId) { alert('삭제할 티켓을 선택해주세요.'); return; }
+        if (confirm(`티켓 ID ${ticketId}을(를) 정말 삭제하시겠습니까?`)) {
+            const csrfInput = document.querySelector('input[name="csrfmiddlewaretoken"]');
+            const csrfToken = csrfInput ? csrfInput.value : '';
+            const url = `{% url 'delete_ticket' 0 %}`.replace('0', ticketId);
+
+            fetch(url, {
+                method: 'POST',
+                headers: { 'X-CSRFToken': csrfToken }
+            })
+            .then(handleResponse)
+            .then(result => {
+                alert(result.message);
+                window.location.reload();
+            })
+            .catch(error => { console.error('Error:', error); alert(error.message); });
+        }
+    }
+
+    // 버튼 클릭 이벤트
+    document.body.addEventListener('click', function(event) {
+        const button = event.target;
+        const partType = button.dataset.partType;
+        if (button.classList.contains('save-btn')) {
+            handleSaveOrUpdate(partType);
+        } else if (button.classList.contains('update-btn')) {
+            handleSaveOrUpdate(partType, selectedTicketId);
+        } else if (button.classList.contains('delete-btn')) {
+            handleDelete(selectedTicketId);
+        }
+    });
+
+    // 더블클릭 데이터 로드 (하이픈 - 적용)
+    const surgeryListBody = document.getElementById('surgeryListBody');
+    if (surgeryListBody) {
+        surgeryListBody.addEventListener('dblclick', function(event) {
+            const row = event.target.closest('tr');
+            if (!row) return;
+            selectedTicketId = row.dataset.ticketId;
+            if (!selectedTicketId) return;
+            document.querySelectorAll('#surgeryListBody tr').forEach(tr => tr.style.backgroundColor = '');
+            row.style.backgroundColor = '#dbeafe';
+
+            fetch(`/tickets/get/${selectedTicketId}/`)
+                .then(response => {
+                    if (!response.ok) throw new Error('서버 응답 오류');
+                    return response.json();
+                })
+                .then(data => {
+                    const partType = data.part_type;
+                    const targetTabButton = document.querySelector(`button[data-bs-target="#${partType}-panel"]`);
+                    if (targetTabButton) {
+                        const tab = new bootstrap.Tab(targetTabButton);
+                        tab.show();
+                    }
+                    setTimeout(() => {
+                        populateData(data);
+                        updateVisibleNotice(partType);
+                    }, 150);
+                })
+                .catch(error => { console.error('Error:', error); alert('데이터 불러오기 실패'); });
+        });
+    }
+
+    function populateData(data) {
+        const partType = data.part_type;
+        const activePanel = document.getElementById(`${partType}-panel`);
+        if (!activePanel) return;
+
+        Object.keys(data).forEach(key => {
+            // [중요] 여기도 하이픈(-) 적용
+            const fieldId = `id_${partType}-${key}`;
+            const fieldElement = document.getElementById(fieldId);
+
+            if (fieldElement) {
+                fieldElement.value = data[key] || '';
+            } else {
+                const fieldName = `${partType}-${key}`;
+                const elementByName = activePanel.querySelector(`[name="${fieldName}"]`);
+                if (elementByName) {
+                    elementByName.value = data[key] || '';
+                }
+            }
+        });
+    }
+});
+</script>
+{% endblock %}

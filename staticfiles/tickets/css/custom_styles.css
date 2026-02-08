@@ -1,0 +1,38 @@
+/* custom_styles.css */
+
+/* OP 준비 티켓 입력 폼 전체를 감싸는 컨테이너 스타일 */
+.form-container-compact {
+    padding-right: 20px; /* 오른쪽 여백 추가 */
+}
+
+/* 폼 내부의 각 섹션 (E, N, D) 스타일 */
+.form-container-compact .form-section {
+    padding: 0.8rem; /* 섹션 내부 여백 줄이기 */
+    margin-bottom: 0.8rem; /* 섹션 간 간격 줄이기 */
+    border: 1px solid #dee2e6;
+    border-radius: 5px;
+}
+
+.form-container-compact .form-section h5 {
+    font-size: 1rem; /* E, N, D 제목 크기 줄이기 */
+    margin-bottom: 1rem;
+}
+
+/* 모든 라벨(이름표)의 글자 크기 및 여백 조정 */
+.form-container-compact label {
+    font-size: 0.85rem; /* 라벨 글자 크기 줄이기 */
+    margin-bottom: 0.2rem;
+}
+
+/* 모든 입력 박스, 선택 메뉴의 높이와 글자 크기 조정 */
+.form-container-compact .form-control,
+.form-container-compact .form-select {
+    font-size: 0.85rem; /* 입력칸 글자 크기 줄이기 */
+    padding: 0.25rem 0.5rem; /* 내부 여백 줄이기 (상하, 좌우) */
+    height: auto; /* 높이 자동 조절 */
+}
+
+/* 날짜 입력 필드 아이콘 정렬을 위한 추가 스타일 */
+.form-container-compact input[type="date"].form-control {
+    padding-right: 0.5rem;
+}
